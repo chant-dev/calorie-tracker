@@ -71,9 +71,7 @@ export async function searchUSDAFoods(query: string, pageSize = 15): Promise<USD
   url.searchParams.set("api_key", apiKey);
   url.searchParams.set("dataType", "Foundation,SR Legacy,Branded");
 
-  const res = await fetch(url.toString(), {
-    next: { revalidate: 3600 },
-  });
+  const res = await fetch(url.toString(), { cache: "no-store" });
 
   if (!res.ok) {
     throw new Error(`USDA API error: ${res.status}`);
