@@ -2,7 +2,8 @@
 
 import { useState, useCallback, useRef } from "react";
 import useSWR, { mutate } from "swr";
-import { BookmarkIcon, PlusIcon } from "lucide-react";
+import { BookmarkIcon, PlusIcon, LogOutIcon } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { todayString } from "@/lib/utils";
 import { Entry, SavedFood } from "@/lib/types";
 import { DayNav } from "./DayNav";
@@ -97,13 +98,22 @@ export function CalorieTracker() {
           <span className="text-[17px] font-semibold tracking-tight text-text">
             Calories
           </span>
-          <button
-            onClick={() => setShowSavedFoods(true)}
-            className="flex items-center gap-1.5 text-[14px] text-text-secondary hover:text-text transition-colors px-2 py-1.5 rounded-lg hover:bg-surface-raised"
-          >
-            <BookmarkIcon className="w-4 h-4" />
-            <span className="hidden sm:inline">Saved</span>
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setShowSavedFoods(true)}
+              className="flex items-center gap-1.5 text-[14px] text-text-secondary hover:text-text transition-colors px-2 py-1.5 rounded-lg hover:bg-surface-raised"
+            >
+              <BookmarkIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">Saved</span>
+            </button>
+            <button
+              onClick={() => signOut()}
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-text-muted hover:text-text hover:bg-surface-raised transition-colors"
+              aria-label="Sign out"
+            >
+              <LogOutIcon className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 

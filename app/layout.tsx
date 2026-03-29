@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,7 +12,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Calories",
   description: "Simple, fast calorie and protein tracker",
-  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
@@ -21,15 +21,11 @@ export const viewport: Viewport = {
   themeColor: "#FAFAF9",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body className="bg-bg text-text font-sans min-h-screen">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

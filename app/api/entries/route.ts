@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const date = req.nextUrl.searchParams.get("date");
-  if (!date) {
-    return NextResponse.json({ error: "date required" }, { status: 400 });
-  }
+  if (!date) return NextResponse.json({ error: "date required" }, { status: 400 });
 
   const entries = await prisma.entry.findMany({
-    where: { date },
+    where: { userId: session.user.id, date },
     orderBy: { createdAt: "asc" },
   });
 
@@ -16,6 +19,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const body = await req.json();
   const { date, foodName, calories, protein, sourceType, quantity, unit } = body;
 
@@ -25,6 +31,7 @@ export async function POST(req: NextRequest) {
 
   const entry = await prisma.entry.create({
     data: {
+      userId: session.user.id,
       date,
       foodName: foodName || null,
       calories: Number(calories),
